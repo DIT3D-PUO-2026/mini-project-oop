@@ -1,6 +1,6 @@
-package com.campusgaming.model;
+package model;
 
-import com.campusgaming.exception.ValidationException;
+import exception.ValidationException;
 
 public class IndividualPlayer extends Player {
     public IndividualPlayer(String playerId, String playerName, String gamerTag,

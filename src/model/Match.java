@@ -1,6 +1,6 @@
-package com.campusgaming.model;
+package model;
 
-import com.campusgaming.exception.ValidationException;
+import exception.ValidationException;
 
 public class Match {
     private final String matchId;
@@ -28,6 +28,11 @@ public class Match {
     public String getMatchId() {
         return matchId;
     }
+
+    public String getGameId() { return game.getGameId(); }
+    public String getPlayerOneId() { return playerOneId; }
+    public String getPlayerTwoId() { return playerTwoId; }
+    public String getResult() { return result; }
 
     @Override
     public String toString() {

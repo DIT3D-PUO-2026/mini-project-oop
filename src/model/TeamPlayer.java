@@ -1,6 +1,6 @@
-package com.campusgaming.model;
+package model;
 
-import com.campusgaming.exception.ValidationException;
+import exception.ValidationException;
 
 public class TeamPlayer extends Player {
     private final int teamSize;
@@ -18,6 +18,8 @@ public class TeamPlayer extends Player {
     public String getPlayerType() {
         return "Team (" + teamSize + ")";
     }
+
+    public int getTeamSize() { return teamSize; }
 
     @Override
     public double getAdditionalFee() {

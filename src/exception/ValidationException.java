@@ -1,4 +1,4 @@
-package com.campusgaming.exception;
+package exception;
 
 public class ValidationException extends Exception {
     public ValidationException(String message) {

@@ -1,6 +1,6 @@
-package com.campusgaming.model;
+package model;
 
-import com.campusgaming.exception.ValidationException;
+import exception.ValidationException;
 
 public abstract class Player {
     private final String playerId;
@@ -31,6 +31,11 @@ public abstract class Player {
     public String getPlayerId() {
         return playerId;
     }
+
+    public String getPlayerName() { return playerName; }
+    public String getGamerTag() { return gamerTag; }
+    public String getPhoneNumber() { return phoneNumber; }
+    public int getAge() { return age; }
 
     public abstract String getPlayerType();
 

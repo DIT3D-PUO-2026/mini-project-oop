@@ -1,13 +1,11 @@
-package com.campusgaming.app;
+package app;
 
-import com.campusgaming.exception.ValidationException;
-import com.campusgaming.model.Game;
-import com.campusgaming.model.IndividualPlayer;
-import com.campusgaming.model.Match;
-import com.campusgaming.model.Player;
-import com.campusgaming.model.TeamPlayer;
-import com.campusgaming.model.TournamentRegistration;
-import com.campusgaming.service.TournamentSystem;
+import exception.ValidationException;
+import model.Game;
+import model.IndividualPlayer;
+import model.Player;
+import model.TeamPlayer;
+import service.TournamentSystem;
 
 import java.util.Scanner;
 
@@ -60,8 +58,8 @@ public class Main {
 
     private void displayGames() {
         System.out.println("\nGAME ID  GAME NAME              CATEGORY        FEE      MAX");
-        if (system.getGames().isEmpty()) System.out.println("No games recorded.");
-        for (Game game : system.getGames()) System.out.println(game);
+        if (system.getGameCount() == 0) System.out.println("No games recorded.");
+        for (int index = 0; index < system.getGameCount(); index++) System.out.println(system.getGames()[index]);
     }
 
     private void registerPlayer() throws ValidationException {
@@ -81,8 +79,8 @@ public class Main {
 
     private void displayPlayers() {
         System.out.println("\nPLAYER ID PLAYER NAME            GAMER TAG        PHONE           TYPE           AGE");
-        if (system.getPlayers().isEmpty()) System.out.println("No players recorded.");
-        for (Player player : system.getPlayers()) System.out.println(player);
+        if (system.getPlayerCount() == 0) System.out.println("No players recorded.");
+        for (int index = 0; index < system.getPlayerCount(); index++) System.out.println(system.getPlayers()[index]);
     }
 
     private void createRegistration() throws ValidationException {
@@ -92,13 +90,13 @@ public class Main {
 
     private void displayRegistrations() {
         System.out.println("\nREGISTRATION PLAYER ID GAME ID    FEE");
-        if (system.getRegistrations().isEmpty()) System.out.println("No registrations recorded.");
-        for (TournamentRegistration registration : system.getRegistrations()) System.out.println(registration);
+        if (system.getRegistrationCount() == 0) System.out.println("No registrations recorded.");
+        for (int index = 0; index < system.getRegistrationCount(); index++) System.out.println(system.getRegistrations()[index]);
     }
 
     private void calculateFees() {
         double total = 0;
-        for (TournamentRegistration registration : system.getRegistrations()) total += registration.getFee();
+        for (int index = 0; index < system.getRegistrationCount(); index++) total += system.getRegistrations()[index].getFee();
         System.out.printf("Total registration fees: RM%.2f%n", total);
     }
 
@@ -110,8 +108,8 @@ public class Main {
 
     private void displayMatches() {
         System.out.println("\nMATCH ID GAME ID    PLAYER 1     PLAYER 2     RESULT");
-        if (system.getMatches().isEmpty()) System.out.println("No matches recorded.");
-        for (Match match : system.getMatches()) System.out.println(match);
+        if (system.getMatchCount() == 0) System.out.println("No matches recorded.");
+        for (int index = 0; index < system.getMatchCount(); index++) System.out.println(system.getMatches()[index]);
     }
 
     private String readText(String prompt) { System.out.print(prompt); return scanner.nextLine().trim(); }

@@ -1,6 +1,6 @@
-package com.campusgaming.model;
+package model;
 
-import com.campusgaming.exception.ValidationException;
+import exception.ValidationException;
 
 public class TournamentRegistration {
     private final String registrationId;
@@ -20,6 +20,9 @@ public class TournamentRegistration {
     public String getRegistrationId() {
         return registrationId;
     }
+
+    public String getPlayerId() { return player.getPlayerId(); }
+    public String getGameId() { return game.getGameId(); }
 
     public double getFee() {
         return game.calculateFee(player);

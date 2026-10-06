@@ -1,6 +1,6 @@
-package com.campusgaming.model;
+package model;
 
-import com.campusgaming.exception.ValidationException;
+import exception.ValidationException;
 
 public class Game {
     private final String gameId;
@@ -31,6 +31,10 @@ public class Game {
     public String getGameId() {
         return gameId;
     }
+
+    public String getGameName() { return gameName; }
+    public String getCategory() { return category; }
+    public double getRegistrationFee() { return registrationFee; }
 
     public int getMaximumPlayers() {
         return maximumPlayers;
