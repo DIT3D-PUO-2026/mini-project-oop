@@ -7,6 +7,7 @@ import model.Player;
 import model.TeamPlayer;
 import service.TournamentSystem;
 
+import java.io.IOException;
 import java.util.Scanner;
 
 public class Main {
@@ -18,6 +19,7 @@ public class Main {
     private void run() {
         int choice;
         do {
+            clearTerminal();
             printMenu();
             choice = readInt("Enter your choice: ");
             try {
@@ -37,6 +39,7 @@ public class Main {
             } catch (ValidationException exception) {
                 System.out.println("Error: " + exception.getMessage());
             }
+            if (choice != 0) pauseBeforeReturningToMenu();
         } while (choice != 0);
     }
 
@@ -110,6 +113,30 @@ public class Main {
         System.out.println("\nMATCH ID GAME ID    PLAYER 1     PLAYER 2     RESULT");
         if (system.getMatchCount() == 0) System.out.println("No matches recorded.");
         for (int index = 0; index < system.getMatchCount(); index++) System.out.println(system.getMatches()[index]);
+    }
+
+    private void pauseBeforeReturningToMenu() {
+        System.out.println("\nPress Enter to return to main menu...");
+        scanner.nextLine();
+    }
+
+    private void clearTerminal() {
+        boolean windows = System.getProperty("os.name").toLowerCase().contains("win");
+        if (windows) {
+            try {
+                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+                return;
+            } catch (IOException exception) {
+                // Use ANSI sequences below when Windows command is unavailable.
+            } catch (InterruptedException exception) {
+                Thread.currentThread().interrupt();
+                return;
+            }
+        }
+
+        // Clear visible terminal screen without resetting terminal input state.
+        System.out.print("\033[H\033[2J\033[3J");
+        System.out.flush();
     }
 
     private String readText(String prompt) { System.out.print(prompt); return scanner.nextLine().trim(); }
