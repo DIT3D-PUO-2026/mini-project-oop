@@ -3,10 +3,8 @@ package service;
 import database.FileDatabase;
 import exception.ValidationException;
 import model.Game;
-import model.IndividualPlayer;
 import model.Match;
 import model.Player;
-import model.TeamPlayer;
 import model.TournamentRegistration;
 
 import java.io.IOException;
@@ -14,11 +12,10 @@ import java.io.IOException;
 public class TournamentSystem {
     private static final int MAX_RECORDS = 1000;
     private final Game[] games = new Game[MAX_RECORDS];
-    private final Player[] players = new Player[MAX_RECORDS];
     private final TournamentRegistration[] registrations = new TournamentRegistration[MAX_RECORDS];
     private final Match[] matches = new Match[MAX_RECORDS];
+    private final PlayerManagementProcessor playerProcessor = new PlayerManagementProcessor();
     private int gameCount;
-    private int playerCount;
     private int registrationCount;
     private int matchCount;
     private final FileDatabase database = new FileDatabase("data");
@@ -35,10 +32,7 @@ public class TournamentSystem {
     }
 
     public void addPlayer(Player player) throws ValidationException {
-        if (findPlayer(player.getPlayerId()) != null) throw new ValidationException("A player with that ID already exists.");
-        savePlayer(player);
-        ensureCapacity(playerCount, "players");
-        players[playerCount++] = player;
+        playerProcessor.registerPlayer(player);
     }
 
     public void addRegistration(String registrationId, String playerId, String gameId)
@@ -74,10 +68,7 @@ public class TournamentSystem {
     }
 
     public Player findPlayer(String id) {
-        for (int index = 0; index < playerCount; index++) {
-            if (players[index].getPlayerId().equalsIgnoreCase(id.trim())) return players[index];
-        }
-        return null;
+        return playerProcessor.findPlayer(id);
     }
 
     private TournamentRegistration findRegistration(String id) {
@@ -99,14 +90,6 @@ public class TournamentSystem {
             String[][] rows = database.read("games.db");
             for (String[] row : rows) if (row != null) {
                 addLoadedGame(new Game(row[0], row[1], row[2], Double.parseDouble(row[3]), Integer.parseInt(row[4])));
-            }
-            rows = database.read("players.db");
-            for (String[] row : rows) if (row != null) {
-                if (Integer.parseInt(row[5]) > 0) {
-                    addLoadedPlayer(new TeamPlayer(row[0], row[1], row[2], row[3], Integer.parseInt(row[4]), Integer.parseInt(row[5])));
-                } else {
-                    addLoadedPlayer(new IndividualPlayer(row[0], row[1], row[2], row[3], Integer.parseInt(row[4])));
-                }
             }
             rows = database.read("registrations.db");
             for (String[] row : rows) if (row != null) {
@@ -133,11 +116,6 @@ public class TournamentSystem {
         catch (IOException exception) { throw new ValidationException("Could not save game data."); }
     }
 
-    private void savePlayer(Player player) throws ValidationException {
-        try { database.savePlayer(player); }
-        catch (IOException exception) { throw new ValidationException("Could not save player data."); }
-    }
-
     private void saveRegistration(TournamentRegistration registration) throws ValidationException {
         try { database.saveRegistration(registration); }
         catch (IOException exception) { throw new ValidationException("Could not save registration data."); }
@@ -153,14 +131,13 @@ public class TournamentSystem {
     }
 
     private void addLoadedGame(Game game) { if (gameCount < MAX_RECORDS) games[gameCount++] = game; }
-    private void addLoadedPlayer(Player player) { if (playerCount < MAX_RECORDS) players[playerCount++] = player; }
     private void addLoadedRegistration(TournamentRegistration registration) { if (registrationCount < MAX_RECORDS) registrations[registrationCount++] = registration; }
     private void addLoadedMatch(Match match) { if (matchCount < MAX_RECORDS) matches[matchCount++] = match; }
 
     public Game[] getGames() { return games; }
     public int getGameCount() { return gameCount; }
-    public Player[] getPlayers() { return players; }
-    public int getPlayerCount() { return playerCount; }
+    public Player[] getPlayers() { return playerProcessor.getPlayers(); }
+    public int getPlayerCount() { return playerProcessor.getPlayerCount(); }
     public TournamentRegistration[] getRegistrations() { return registrations; }
     public int getRegistrationCount() { return registrationCount; }
     public Match[] getMatches() { return matches; }
