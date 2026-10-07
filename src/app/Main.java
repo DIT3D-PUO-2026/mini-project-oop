@@ -5,7 +5,6 @@ import model.Game;
 import model.IndividualPlayer;
 import model.Player;
 import model.TeamPlayer;
-import service.PlayerManagementProcessor;
 import service.TournamentSystem;
 
 import java.util.Scanner;
@@ -13,7 +12,6 @@ import java.util.Scanner;
 public class Main {
     private final Scanner scanner = new Scanner(System.in);
     private final TournamentSystem system = new TournamentSystem();
-    private final PlayerManagementProcessor playerProcessor = new PlayerManagementProcessor();
 
     public static void main(String[] args) { new Main().run(); }
 
@@ -26,12 +24,13 @@ public class Main {
                 switch (choice) {
                     case 1: addGame(); break;
                     case 2: displayGames(); break;
-                    case 3: playerManagementMenu(); break;
-                    case 4: createRegistration(); break;
-                    case 5: displayRegistrations(); break;
-                    case 6: calculateFees(); break;
-                    case 7: addMatch(); break;
-                    case 8: displayMatches(); break;
+                    case 3: registerPlayer(); break;
+                    case 4: displayPlayers(); break;
+                    case 5: createRegistration(); break;
+                    case 6: displayRegistrations(); break;
+                    case 7: calculateFees(); break;
+                    case 8: addMatch(); break;
+                    case 9: displayMatches(); break;
                     case 0: System.out.println("Thank you. Goodbye!"); break;
                     default: System.out.println("Invalid choice. Please select a menu number.");
                 }
@@ -45,9 +44,9 @@ public class Main {
         System.out.println("\n============================================");
         System.out.println("       CAMPUS GAMING TOURNAMENT SYSTEM");
         System.out.println("============================================");
-        System.out.println("1. Add Game\n2. Display Games\n3. Player Management");
-        System.out.println("4. Create Tournament Registration\n5. Display Tournament Registrations");
-        System.out.println("6. Calculate Registration Fees\n7. Add Match Result\n8. Display Match Results\n0. Exit");
+        System.out.println("1. Add Game\n2. Display Games\n3. Register Player\n4. Display Players");
+        System.out.println("5. Create Tournament Registration\n6. Display Tournament Registrations");
+        System.out.println("7. Calculate Registration Fees\n8. Add Match Result\n9. Display Match Results\n0. Exit");
         System.out.println("============================================");
     }
 
@@ -63,28 +62,6 @@ public class Main {
         for (int index = 0; index < system.getGameCount(); index++) System.out.println(system.getGames()[index]);
     }
 
-    private void playerManagementMenu() {
-        int choice;
-        do {
-            System.out.println("\n============================================");
-            System.out.println("             PLAYER MANAGEMENT");
-            System.out.println("============================================");
-            System.out.println("1. Register Player\n2. Display Players\n0. Return to Main Menu");
-            System.out.println("============================================");
-            choice = readInt("Enter your choice: ");
-            try {
-                switch (choice) {
-                    case 1: registerPlayer(); break;
-                    case 2: displayPlayers(); break;
-                    case 0: System.out.println("Returning to the main menu."); break;
-                    default: System.out.println("Invalid choice. Please select a menu number.");
-                }
-            } catch (ValidationException exception) {
-                System.out.println("Error: " + exception.getMessage());
-            }
-        } while (choice != 0);
-    }
-
     private void registerPlayer() throws ValidationException {
         String id = readText("Player ID: ");
         String name = readText("Player name: ");
@@ -92,21 +69,18 @@ public class Main {
         String phone = readText("Phone number: ");
         int age = readInt("Age: ");
         int type = readInt("Player type (1 Individual, 2 Team): ");
-
         Player player;
-        if (type == 1) player = new IndividualPlayer(id, name, tag, phone, age);
-        else if (type == 2) player = new TeamPlayer(id, name, tag, phone, age, readInt("Team size: "));
+        if (type == 2) player = new TeamPlayer(id, name, tag, phone, age, readInt("Team size: "));
+        else if (type == 1) player = new IndividualPlayer(id, name, tag, phone, age);
         else throw new ValidationException("Player type must be 1 or 2.");
-
-        playerProcessor.registerPlayer(player);
+        system.addPlayer(player);
         System.out.println("Player registered successfully.");
     }
 
     private void displayPlayers() {
         System.out.println("\nPLAYER ID PLAYER NAME            GAMER TAG        PHONE           TYPE           AGE");
-        Player[] players = playerProcessor.getPlayers();
-        if (players.length == 0) System.out.println("No players recorded.");
-        for (Player player : players) System.out.println(player);
+        if (system.getPlayerCount() == 0) System.out.println("No players recorded.");
+        for (int index = 0; index < system.getPlayerCount(); index++) System.out.println(system.getPlayers()[index]);
     }
 
     private void createRegistration() throws ValidationException {
